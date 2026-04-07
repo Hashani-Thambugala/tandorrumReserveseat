@@ -1,0 +1,687 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Tandorrum.Event | Ticket Booking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #ffffff;
+      padding: clamp(0.75rem, 3vw, 1.5rem);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* compact container with brand colors - fully responsive */
+    .booking-card {
+      max-width: min(900px, 95%);
+      width: 100%;
+      margin: 0 auto;
+      background: white;
+      backdrop-filter: blur(8px);
+      border-radius: clamp(1rem, 4vw, 1.5rem);
+      padding: clamp(1rem, 4vw, 1.5rem);
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 61, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    /* header with logo - responsive */
+    .header-compact {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: clamp(0.5rem, 2vw, 1rem);
+      margin-bottom: clamp(0.75rem, 3vw, 1rem);
+      padding-bottom: clamp(0.5rem, 2vw, 0.75rem);
+      border-bottom: 1px solid rgba(255, 61, 0, 0.3);
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: clamp(0.5rem, 2vw, 1rem);
+      flex-wrap: wrap;
+    }
+
+    /* Responsive logo image */
+    .logo-img {
+      width: clamp(48px, 10vw, 98px);
+      height: clamp(48px, 10vw, 98px);
+      object-fit: contain;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .title h2 {
+      font-size: clamp(1rem, 4vw, 1.3rem);
+      font-weight: 800;
+      color: #fb5d1f;
+      letter-spacing: -0.3px;
+    }
+
+    .title p {
+      font-size: clamp(0.6rem, 2.5vw, 0.7rem);
+      color: #ffaa88;
+      margin-top: 2px;
+    }
+
+    /* stats row - responsive grid */
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: clamp(0.3rem, 2vw, 0.5rem);
+      background: white;
+      border-radius: 1rem;
+      padding: clamp(0.5rem, 2vw, 0.8rem);
+      margin-bottom: 1rem;
+    }
+
+    .stat-block {
+      display: flex;
+      align-items: baseline;
+      gap: 0.3rem;
+      background: rgba(0, 0, 0, 0.03);
+      padding: clamp(0.15rem, 1vw, 0.25rem) clamp(0.5rem, 2vw, 0.8rem);
+      border-radius: 2rem;
+      flex: 1;
+      min-width: fit-content;
+      justify-content: center;
+    }
+
+    .stat-label {
+      font-size: clamp(0.6rem, 2vw, 0.7rem);
+      text-transform: uppercase;
+      color: #fb5d1f;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .stat-number {
+      font-size: clamp(1rem, 4vw, 1.3rem);
+      font-weight: 800;
+      color: #FF3D00;
+      line-height: 1;
+    }
+
+    /* quantity selector - fully responsive */
+    .qty-compact {
+      background: white;
+      border-radius: 1.2rem;
+      padding: clamp(0.8rem, 3vw, 1.2rem);
+      margin: clamp(0.5rem, 2vw, 0.8rem) 0;
+      text-align: center;
+    }
+
+    .qty-label {
+      font-size: clamp(0.75rem, 3vw, 0.85rem);
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+      letter-spacing: 0.5px;
+      color: #fb5d1f;
+    }
+
+    .qty-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(0.8rem, 4vw, 1.5rem);
+      flex-wrap: wrap;
+    }
+
+    .qty-btn {
+      background: #000000;
+      width: clamp(40px, 8vw, 50px);
+      height: clamp(40px, 8vw, 50px);
+      border-radius: 50%;
+      font-size: clamp(1.4rem, 5vw, 1.8rem);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid #FF3D00;
+      color: #FF3D00;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .qty-btn:active {
+      transform: scale(0.95);
+    }
+
+    .qty-value-compact {
+      font-size: clamp(1.5rem, 6vw, 2.2rem);
+      font-weight: 800;
+      background: white;
+      padding: clamp(0.1rem, 2vw, 0.2rem) clamp(1rem, 4vw, 1.5rem);
+      border-radius: 2rem;
+      min-width: clamp(70px, 20vw, 100px);
+      text-align: center;
+      color: #FF3D00;
+      border: 1px solid rgba(255, 61, 0, 0.3);
+    }
+
+    .max-hint {
+      font-size: clamp(0.6rem, 2.5vw, 0.7rem);
+      margin-top: 0.6rem;
+      color: #ffaa66;
+      background: white;
+      display: inline-block;
+      padding: 0.2rem clamp(0.6rem, 2vw, 1rem);
+      border-radius: 2rem;
+    }
+
+    /* payment summary - responsive */
+    .payment-summary {
+      background: white;
+      border-radius: 1rem;
+      padding: clamp(0.6rem, 2.5vw, 1rem);
+      margin: clamp(0.5rem, 2vw, 0.8rem) 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: clamp(0.5rem, 3vw, 1rem);
+    }
+
+    .price-detail {
+      display: flex;
+      gap: clamp(0.5rem, 2vw, 1rem);
+      font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+      color: #FF3D00;
+      font-weight: 500;
+      flex-wrap: wrap;
+    }
+
+    .total-large {
+      font-size: clamp(1.2rem, 5vw, 1.8rem);
+      font-weight: 800;
+      color: #FF3D00;
+    }
+
+    .total-large small {
+      font-size: clamp(0.6rem, 2vw, 0.75rem);
+      font-weight: 400;
+      color: #FF3D00;
+    }
+
+    .pay-btn {
+      background: linear-gradient(100deg, #FF3D00, #ff6a33);
+      border: none;
+      padding: clamp(0.5rem, 2vw, 0.8rem) clamp(1rem, 4vw, 1.8rem);
+      border-radius: 2rem;
+      font-size: clamp(0.85rem, 3vw, 1rem);
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(255, 61, 0, 0.3);
+      white-space: nowrap;
+    }
+
+    .pay-btn:active {
+      transform: scale(0.97);
+    }
+
+    .pay-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+      box-shadow: 0 6px 16px rgba(255, 61, 0, 0.4);
+    }
+
+    .pay-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* action row - responsive */
+    .actions-row {
+      display: flex;
+      gap: clamp(0.4rem, 2vw, 0.8rem);
+      justify-content: flex-end;
+      margin-top: clamp(0.3rem, 2vw, 0.5rem);
+      flex-wrap: wrap;
+    }
+
+    .small-btn {
+      background: rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255, 61, 0, 0.3);
+      padding: clamp(0.35rem, 1.5vw, 0.5rem) clamp(0.8rem, 3vw, 1.2rem);
+      border-radius: 2rem;
+      font-size: clamp(0.65rem, 2.5vw, 0.75rem);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: #FF3D00;
+      white-space: nowrap;
+    }
+
+    .small-btn:active {
+      transform: scale(0.96);
+    }
+
+    .small-btn:hover {
+      background: rgba(255, 61, 0, 0.1);
+      border-color: #FF3D00;
+    }
+
+    /* Toast message responsive */
+    .toast {
+      position: fixed;
+      bottom: clamp(10px, 4vw, 20px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1a1a2a;
+      backdrop-filter: blur(12px);
+      padding: clamp(6px, 2vw, 10px) clamp(12px, 4vw, 20px);
+      border-radius: 40px;
+      font-size: clamp(0.7rem, 2.5vw, 0.8rem);
+      font-weight: 500;
+      color: #FF3D00;
+      border-left: 3px solid #FF3D00;
+      z-index: 1000;
+      transition: opacity 0.25s;
+      pointer-events: none;
+      white-space: nowrap;
+      font-family: monospace;
+      max-width: 90vw;
+      white-space: normal;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    /* Extra small devices */
+    @media (max-width: 480px) {
+      .stats-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .stat-block {
+        justify-content: space-between;
+        width: 100%;
+      }
+      
+      .payment-summary {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .actions-row {
+        justify-content: center;
+      }
+      
+      .price-detail {
+        justify-content: center;
+      }
+      
+      .header-compact {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .logo-area {
+        justify-content: center;
+      }
+      
+      .qty-controls {
+        gap: 0.8rem;
+      }
+      
+      .qty-btn {
+        width: 44px;
+        height: 44px;
+        font-size: 1.6rem;
+      }
+    }
+
+    /* Small devices (landscape phones) */
+    @media (min-width: 481px) and (max-width: 768px) {
+      .stats-row {
+        gap: 0.4rem;
+      }
+      
+      .stat-block {
+        padding: 0.15rem 0.6rem;
+      }
+    }
+
+    /* Tablet devices */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .booking-card {
+        max-width: 85%;
+      }
+    }
+
+    /* Large screens */
+    @media (min-width: 1200px) {
+      .booking-card {
+        max-width: 950px;
+      }
+      
+      .stat-number {
+        font-size: 1.4rem;
+      }
+      
+      .qty-value-compact {
+        font-size: 2.2rem;
+      }
+    }
+
+    /* Touch-friendly adjustments */
+    @media (hover: none) and (pointer: coarse) {
+      .qty-btn, .pay-btn, .small-btn {
+        cursor: default;
+      }
+      
+      .qty-btn:active {
+        transform: scale(0.96);
+      }
+    }
+
+    /* Landscape orientation optimization */
+    @media (max-width: 900px) and (orientation: landscape) {
+      body {
+        padding: 0.75rem;
+      }
+      
+      .booking-card {
+        max-width: 95%;
+      }
+      
+      .stats-row {
+        gap: 0.3rem;
+      }
+      
+      .stat-block {
+        padding: 0.1rem 0.5rem;
+      }
+    }
+
+    /* Smooth transitions for all interactive elements */
+    button, .qty-btn, .small-btn, .pay-btn {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Prevent layout shifts */
+    .stat-number, .qty-value-compact, .total-large {
+      transition: all 0.1s ease;
+    }
+  </style>
+</head>
+<body>
+<div class="booking-card">
+  <div class="header-compact">
+    <div class="logo-area">
+      <!-- Responsive Logo Image -->
+      <!-- <img class="logo-img" src="img/logoTE.png" 
+           alt="Tandorrum.Event Logo"> -->
+      <div class="title">
+        <h2>Book your ticket</h2>
+        <p>Book your ticket in simple way</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- live stats compact - fully responsive -->
+  <div class="stats-row">
+    <div class="stat-block"><span class="stat-label">Total</span><span class="stat-number" id="totalSeats">48</span></div>
+    <div class="stat-block"><span class="stat-label">🟢 Available</span><span class="stat-number" id="availableCount">--</span></div>
+    <div class="stat-block"><span class="stat-label">🔴 Booked</span><span class="stat-number" id="bookedCount">--</span></div>
+    <div class="stat-block"><span class="stat-label"> Your qty</span><span class="stat-number" id="yourQtyStat">0</span></div>
+  </div>
+
+  <!-- quantity selector compact - responsive -->
+  <div class="qty-compact">
+    <div class="qty-label"> SELECT Ticket QUANTITY</div>
+    <div class="qty-controls">
+      <div class="qty-btn" id="decBtn" aria-label="Decrease quantity">−</div>
+      <div class="qty-value-compact" id="qtyValue">0</div>
+      <div class="qty-btn" id="incBtn" aria-label="Increase quantity">+</div>
+    </div>
+    <div class="max-hint" id="maxHint">max available: <span id="maxSeatsSpan">0</span></div>
+  </div>
+
+  <!-- payment bar compact - responsive -->
+  <div class="payment-summary">
+    <div class="price-detail">
+      <span> $12.50 each</span>
+      <span> no fees</span>
+    </div>
+    <div class="total-large">$<span id="totalPriceSpan">0</span><small> USD</small></div>
+    <button class="pay-btn" id="payNowBtnCompact"> PAY NOW</button>
+  </div>
+
+  <!-- bottom actions - responsive -->
+  <div class="actions-row">
+    <button class="small-btn" id="clearQtyBtn"> Reset qty</button>
+    <button class="small-btn" id="resetAllBtn"> Reset all</button>
+  </div>
+</div>
+<div id="toastMsg" class="toast" style="opacity:0; visibility:hidden;">Message</div>
+
+<script>
+  // ---------- CONFIGURATION ----------
+  const TOTAL_SEATS = 48;
+  const TICKET_PRICE = 12.50;
+  const INITIAL_BOOKED = 11;   // pre-booked seats
+  
+  // State
+  let bookedSeats = INITIAL_BOOKED;
+  let selectedQty = 0;
+  
+  // helpers
+  function getAvailable() {
+    return TOTAL_SEATS - bookedSeats;
+  }
+  
+  function getMaxSelectable() {
+    return getAvailable();
+  }
+  
+  // full UI refresh
+  function refreshCompactUI() {
+    const available = getAvailable();
+    const booked = bookedSeats;
+    const maxSelect = getMaxSelectable();
+    
+    // stats
+    document.getElementById('availableCount').innerText = available;
+    document.getElementById('bookedCount').innerText = booked;
+    document.getElementById('totalSeats').innerText = TOTAL_SEATS;
+    document.getElementById('yourQtyStat').innerText = selectedQty;
+    
+    // quantity display
+    const qtySpan = document.getElementById('qtyValue');
+    if (qtySpan) qtySpan.innerText = selectedQty;
+    
+    // max hint
+    const maxHintSpan = document.getElementById('maxSeatsSpan');
+    if (maxHintSpan) maxHintSpan.innerText = maxSelect;
+    
+    // total price
+    const totalAmount = selectedQty * TICKET_PRICE;
+    document.getElementById('totalPriceSpan').innerText = totalAmount.toFixed(2);
+    
+    // pay button state
+    const payBtn = document.getElementById('payNowBtnCompact');
+    if (payBtn) {
+      if (selectedQty <= 0) {
+        payBtn.disabled = true;
+      } else {
+        payBtn.disabled = false;
+      }
+    }
+    
+    // style for increment/decrement buttons (visual limit)
+    const incBtn = document.getElementById('incBtn');
+    const decBtn = document.getElementById('decBtn');
+    if (incBtn) {
+      incBtn.style.opacity = selectedQty >= maxSelect ? '0.5' : '1';
+      incBtn.style.cursor = selectedQty >= maxSelect ? 'not-allowed' : 'pointer';
+    }
+    if (decBtn) {
+      decBtn.style.opacity = selectedQty <= 0 ? '0.5' : '1';
+      decBtn.style.cursor = selectedQty <= 0 ? 'not-allowed' : 'pointer';
+    }
+    
+    // warning hint color
+    const maxHintDiv = document.getElementById('maxHint');
+    if (maxHintDiv && selectedQty === maxSelect && maxSelect > 0) {
+      maxHintDiv.style.color = "#ff8866";
+    } else {
+      maxHintDiv.style.color = "#ffaa66";
+    }
+  }
+  
+  // toast message
+  let toastTimer = null;
+  function showCompactToast(msg, duration = 1800) {
+    const toast = document.getElementById('toastMsg');
+    if (!toast) return;
+    if (toastTimer) clearTimeout(toastTimer);
+    toast.innerText = msg;
+    toast.style.visibility = 'visible';
+    toast.style.opacity = '1';
+    toastTimer = setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => {
+        if (toast) toast.style.visibility = 'hidden';
+      }, 250);
+    }, duration);
+  }
+  
+  // quantity logic
+  function incrementQty() {
+    const maxAvail = getMaxSelectable();
+    if (selectedQty < maxAvail) {
+      selectedQty++;
+      refreshCompactUI();
+      showCompactToast(` ${selectedQty} ticket(s) selected`, 800);
+    } else {
+      if (maxAvail === 0) showCompactToast("❌ No available seats left! Reset demo.", 1500);
+      else showCompactToast(` Only ${maxAvail} seat(s) available`, 1300);
+    }
+  }
+  
+  function decrementQty() {
+    if (selectedQty > 0) {
+      selectedQty--;
+      refreshCompactUI();
+      showCompactToast(`Qty: ${selectedQty}`, 800);
+    } else {
+      showCompactToast("Quantity is zero", 1000);
+    }
+  }
+  
+  function resetQuantity() {
+    if (selectedQty !== 0) {
+      selectedQty = 0;
+      refreshCompactUI();
+      showCompactToast(" Quantity reset", 1100);
+    } else {
+      showCompactToast("No tickets to reset", 1000);
+    }
+  }
+  
+  // pay now: book tickets
+  function processPaymentCompact() {
+    if (selectedQty <= 0) {
+      showCompactToast(" Select at least one ticket", 1600);
+      return;
+    }
+    const availableBefore = getAvailable();
+    if (selectedQty > availableBefore) {
+      showCompactToast(" Not enough seats. Adjust quantity.", 1600);
+      if (selectedQty > availableBefore) selectedQty = availableBefore;
+      refreshCompactUI();
+      return;
+    }
+    
+    const totalCost = selectedQty * TICKET_PRICE;
+    const confirmMessage = `Confirm $${totalCost.toFixed(2)} for ${selectedQty} ticket(s)?`;
+    if (window.confirm(confirmMessage)) {
+      bookedSeats += selectedQty;
+      const bookedNow = selectedQty;
+      selectedQty = 0;
+      refreshCompactUI();
+      showCompactToast(`Payment success! ${bookedNow} ticket(s) booked. Enjoy! 🎉`, 2800);
+      setTimeout(() => {
+        showCompactToast(`🎬 Remaining free: ${getAvailable()} seats`, 1800);
+      }, 2000);
+    } else {
+      showCompactToast("Payment canceled", 1200);
+    }
+  }
+  
+  // full reset to initial booked seats
+  function fullReset() {
+    bookedSeats = INITIAL_BOOKED;
+    selectedQty = 0;
+    refreshCompactUI();
+    showCompactToast(" Demo reset: original seat inventory", 1700);
+  }
+  
+  // attach event listeners with touch support
+  window.addEventListener('DOMContentLoaded', () => {
+    bookedSeats = INITIAL_BOOKED;
+    selectedQty = 0;
+    refreshCompactUI();
+    
+    const inc = document.getElementById('incBtn');
+    const dec = document.getElementById('decBtn');
+    const clearQ = document.getElementById('clearQtyBtn');
+    const resetAll = document.getElementById('resetAllBtn');
+    const pay = document.getElementById('payNowBtnCompact');
+    
+    if (inc) {
+      inc.addEventListener('click', incrementQty);
+      inc.addEventListener('touchstart', (e) => { e.preventDefault(); }, { passive: false });
+    }
+    if (dec) {
+      dec.addEventListener('click', decrementQty);
+      dec.addEventListener('touchstart', (e) => { e.preventDefault(); }, { passive: false });
+    }
+    if (clearQ) clearQ.addEventListener('click', resetQuantity);
+    if (resetAll) resetAll.addEventListener('click', fullReset);
+    if (pay) pay.addEventListener('click', processPaymentCompact);
+    
+    showCompactToast(" Tandorrum.Event — select quantity & pay now", 2500);
+  });
+  
+  // Handle orientation change and resize for any additional adjustments
+  window.addEventListener('resize', () => {
+    // Small delay to ensure smooth UI adjustment
+    setTimeout(() => {
+      refreshCompactUI();
+    }, 100);
+  });
+  
+  window.addEventListener('orientationchange', () => {
+    setTimeout(() => {
+      refreshCompactUI();
+    }, 100);
+  });
+</script>
+</body>
+</html>
